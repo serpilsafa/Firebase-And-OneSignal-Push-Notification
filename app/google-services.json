@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "922352161340",
+    "firebase_url": "https://chatapplication-78301.firebaseio.com",
+    "project_id": "chatapplication-78301",
+    "storage_bucket": "chatapplication-78301.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:922352161340:android:18e8752fc81feef7dd6939",
+        "android_client_info": {
+          "package_name": "com.safa.chatapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "922352161340-3ttfajl0rqldtf1tcclkbd0c1rilm8s0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANpzCJoX1HVxCLorBXkpRGSTRk1-hT7Sg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "922352161340-3ttfajl0rqldtf1tcclkbd0c1rilm8s0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
