@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,6 +34,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.safa.chatapplication.R;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -43,6 +45,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private EditText ageET, phoneEt;
     private ImageView imageView;
+    private ProgressBar progressBar;
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
@@ -61,6 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
         ageET = findViewById(R.id.userAgeET);
         phoneEt = findViewById(R.id.userPhoneET);
         imageView = findViewById(R.id.userImageView);
+        progressBar = findViewById(R.id.progressBar);
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference();
@@ -85,12 +89,24 @@ public class ProfileActivity extends AppCompatActivity {
                    assert useremail != null;
                    if (useremail.matches(user.getEmail().toString())){
                        String imageURl = hashMap.get("userImage");
-                       String userAge = hashMap.get("userage");
-                       String userPhone = hashMap.get("userphone");
+                       final String userAge = hashMap.get("userage");
+                       final String userPhone = hashMap.get("userphone");
+                       
+                       Picasso.get().load(imageURl).into(imageView, new Callback() {
+                           @Override
+                           public void onSuccess() {
+                               progressBar.setVisibility(View.GONE);
+                               ageET.setText(userAge);
+                               phoneEt.setText(userPhone);
+                           }
 
-                       Picasso.get().load(imageURl).into(imageView);
-                       ageET.setText(userAge);
-                       phoneEt.setText(userPhone);
+                           @Override
+                           public void onError(Exception e) {
+
+                           }
+                       });
+
+
                    }
 
                }
