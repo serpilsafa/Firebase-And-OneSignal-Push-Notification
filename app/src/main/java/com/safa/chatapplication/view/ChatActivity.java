@@ -71,6 +71,10 @@ public class ChatActivity extends AppCompatActivity {
 
         getData();
 
+        //DatabaseReference myref = database.getReference("PlayerIDs");
+        //myref.removeValue();
+
+
 
         // OneSignal Initialization
         OneSignal.startInit(this)
@@ -79,34 +83,32 @@ public class ChatActivity extends AppCompatActivity {
                 .init();
 
 
-        /*
 
         OneSignal.idsAvailable(new OneSignal.IdsAvailableHandler() {
             @Override
             public void idsAvailable(final String userId, String registrationId) {
-                final DatabaseReference myRef = database.getReference("PlayerIDs");
-                myRef.addValueEventListener(new ValueEventListener() {
+                final DatabaseReference myRefNotify = database.getReference("PlayerIDs");
+                myRefNotify.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                         String UUIDString = UUID.randomUUID().toString();
                         ArrayList<String> myPlayerIdList = new ArrayList<>();
+                        System.out.println("kac sefer geldin !!");
 
-                        if ( dataSnapshot.getValue() != null ){
-                            for (DataSnapshot ds: dataSnapshot.getChildren()){
-                                HashMap<String, String> hashMap = (HashMap<String, String>) ds.getValue();
-                                String playerId = hashMap.get("playerid");
-                                myPlayerIdList.add(playerId);
-                            }
 
-                            if(!myPlayerIdList.contains(userId)){
-                                myRef.child("PlayerIDs").child(UUIDString).child("playerid").setValue(userId);
-                                myRef.child("PlayerIDs").child(UUIDString).child("useremail").setValue(user.getEmail());
-                            }
+                        for (DataSnapshot ds: dataSnapshot.getChildren()) {
 
-                        }else{
-                            myRef.child("PlayerIDs").child(UUIDString).child("playerid").setValue(userId);
-                            myRef.child("PlayerIDs").child(UUIDString).child("useremail").setValue(user.getEmail());
+                            HashMap<String, String> hashMap = (HashMap<String, String>) ds.getValue();
+                            String currentPlayerID = hashMap.get("playerid");
+
+                            myPlayerIdList.add(currentPlayerID);
+                        }
+
+
+                        if (!myPlayerIdList.contains(userId)) {
+                            myRefNotify.child(UUIDString).child("playerid").setValue(userId);
+
                         }
 
 
@@ -114,17 +116,16 @@ public class ChatActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        System.out.println("databaseError "+ databaseError.getMessage() );
+
                     }
                 });
 
-                System.out.println("player id: " + userId);
 
             }
         });
 
 
-         */
+
     }
 
     @Override
