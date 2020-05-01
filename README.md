@@ -1,6 +1,6 @@
 # Firebase-And-OneSignal-Push-Notification
 
-I used firebase firemawork 
+I used firebase firemaworks 
 ---------------------------
 1)  `implementation 'com.google.firebase:firebase-analytics:17.4.0' `
 2)  `implementation 'com.google.firebase:firebase-database:19.3.0' `
