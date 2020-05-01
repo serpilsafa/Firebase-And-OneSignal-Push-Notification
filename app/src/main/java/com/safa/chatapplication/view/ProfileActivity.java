@@ -91,7 +91,7 @@ public class ProfileActivity extends AppCompatActivity {
                        String imageURl = hashMap.get("userImage");
                        final String userAge = hashMap.get("userage");
                        final String userPhone = hashMap.get("userphone");
-                       
+
                        Picasso.get().load(imageURl).into(imageView, new Callback() {
                            @Override
                            public void onSuccess() {

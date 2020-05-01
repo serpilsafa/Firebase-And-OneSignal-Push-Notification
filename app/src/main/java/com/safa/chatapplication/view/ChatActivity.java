@@ -23,9 +23,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.onesignal.OneSignal;
 import com.safa.chatapplication.R;
 import com.safa.chatapplication.adapter.ChatRecycleViewAdapter;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -39,6 +44,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+    private FirebaseUser user;
 
 
 
@@ -51,6 +57,7 @@ public class ChatActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.chat_recyclerView);
         chatMessageET = findViewById(R.id.chat_editText);
+        chatMessageET.setText("");
 
         chatRecycleViewAdapter = new ChatRecycleViewAdapter(chatMessageList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -60,11 +67,64 @@ public class ChatActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
+        user = mAuth.getCurrentUser();
 
         getData();
 
 
+        // OneSignal Initialization
+        OneSignal.startInit(this)
+                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+                .unsubscribeWhenNotificationsAreDisabled(true)
+                .init();
 
+
+        /*
+
+        OneSignal.idsAvailable(new OneSignal.IdsAvailableHandler() {
+            @Override
+            public void idsAvailable(final String userId, String registrationId) {
+                final DatabaseReference myRef = database.getReference("PlayerIDs");
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        String UUIDString = UUID.randomUUID().toString();
+                        ArrayList<String> myPlayerIdList = new ArrayList<>();
+
+                        if ( dataSnapshot.getValue() != null ){
+                            for (DataSnapshot ds: dataSnapshot.getChildren()){
+                                HashMap<String, String> hashMap = (HashMap<String, String>) ds.getValue();
+                                String playerId = hashMap.get("playerid");
+                                myPlayerIdList.add(playerId);
+                            }
+
+                            if(!myPlayerIdList.contains(userId)){
+                                myRef.child("PlayerIDs").child(UUIDString).child("playerid").setValue(userId);
+                                myRef.child("PlayerIDs").child(UUIDString).child("useremail").setValue(user.getEmail());
+                            }
+
+                        }else{
+                            myRef.child("PlayerIDs").child(UUIDString).child("playerid").setValue(userId);
+                            myRef.child("PlayerIDs").child(UUIDString).child("useremail").setValue(user.getEmail());
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        System.out.println("databaseError "+ databaseError.getMessage() );
+                    }
+                });
+
+                System.out.println("player id: " + userId);
+
+            }
+        });
+
+
+         */
     }
 
     @Override
@@ -99,7 +159,6 @@ public class ChatActivity extends AppCompatActivity {
         UUID uuid = UUID.randomUUID();
         String uuidString = uuid.toString();
 
-        FirebaseUser user = mAuth.getCurrentUser();
         String userEmail = user.getEmail().toString();
 
         myRef.child("Chats").child(uuidString).child("useremail").setValue(userEmail);
@@ -107,6 +166,39 @@ public class ChatActivity extends AppCompatActivity {
         myRef.child("Chats").child(uuidString).child("usermessagetime").setValue(ServerValue.TIMESTAMP);
 
         getData();
+
+        sendNotification(messageToSend);
+
+        chatMessageET.setText("");
+
+    }
+
+    private void sendNotification(final String message) {
+        DatabaseReference myRef = database.getReference("PlayerIDs");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    HashMap<String, String> hashMap = (HashMap<String, String>) ds.getValue();
+                    String playerId = hashMap.get("playerid");
+
+
+                    try {
+                        OneSignal.postNotification(new JSONObject("{'contents': {'en':'"+message+"'}, 'include_player_ids': ['" + playerId + "']}"), null);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
     }
 
