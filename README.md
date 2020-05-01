@@ -13,13 +13,13 @@ and also I used **OneSignal** for Push Notification.
 
 if you want OneSignal for your push notification You can use as follows;
 
-**step 1: **
+**step 1:**
 
 Create OneSignal Account and new app repository and config Firebase setting with your app on OneSignal app
 
 ... We will use user playerid for push notification. If you init user on OneSignal you can show your playerid in user details.
 
-**step 2: **
+**step 2:**
 
 init OneSignal on your current activity
 
@@ -28,7 +28,7 @@ init OneSignal on your current activity
                 .unsubscribeWhenNotificationsAreDisabled(true)
                 .init();
                
-**step 3: **
+**step 3:**
 
 You can now send your fist push notification
 
@@ -38,4 +38,20 @@ You can now send your fist push notification
             e.printStackTrace();
         }
                     
+
+**Don't forget gradle config**
+
+You need to write down firstly 
+`apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'`
+on your gradle(app) then you can write down 
+`apply plugin: 'com.google.gms.google-services'`
+
+if you don't get like this your gradle won't work.
+
+
+
+
+
+
+
 
