@@ -17,7 +17,7 @@ if you want OneSignal for your push notification You can use as follows;
 
 Create OneSignal Account and new app repository and config Firebase setting with your app on OneSignal app
 
-... We will use user playerid for push notification. If you init user on OneSignal you can show your playerid in user details.
+We will use user playerid for push notification. If you init user on OneSignal you can show your playerid in user details.
 
 **step 2:**
 
